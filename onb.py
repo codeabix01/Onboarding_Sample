@@ -1,25 +1,31 @@
 import logging
+import re
+import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from pymongo import MongoClient
-import re
-import numpy as np
 
-# Set up basic logging
+# Logging setup
 logging.basicConfig(level=logging.DEBUG)
 
+# Initialize FastAPI app
 app = FastAPI()
-model = SentenceTransformer('all-MiniLM-L6-v2')
+
+# Connect to MongoDB
 client = MongoClient("mongodb://localhost:27017")
 db = client["onboarding"]
 collection = db["clients"]
 
+# Load sentence-transformers model
+model = SentenceTransformer('./local-model')
+
+# Pydantic model for request
 class UserQuery(BaseModel):
     message: str
 
-# Sample intents and training phrases
+# Training data for intent classification
 intent_examples = [
     ("onboarding_status", "How far is Apple with WCIS ID 123456?"),
     ("onboarding_status", "How much percentage Adobe is onboarded?"),
@@ -30,47 +36,55 @@ intent_examples = [
 
 intent_phrases = [ex[1] for ex in intent_examples]
 intent_labels = [ex[0] for ex in intent_examples]
+
+# Precompute intent embeddings
 intent_embeddings = model.encode(intent_phrases)
 
-def extract_company(text):
+# Extract company name from message
+def extract_company(text: str):
     known_companies = [doc["company"] for doc in collection.find({}, {"company": 1})]
     for company in known_companies:
         if company.lower() in text.lower():
             return company
     return None
 
+# FastAPI endpoint
 @app.post("/query")
 def handle_query(q: UserQuery):
     logging.debug(f"Received message: {q.message}")
 
     user_text = q.message
+
+    # Encode user query
     vec = model.encode([user_text])
     sims = cosine_similarity(vec, intent_embeddings)[0]
     best_match_idx = int(np.argmax(sims))
     intent = intent_labels[best_match_idx]
+    confidence = sims[best_match_idx]
+    logging.debug(f"Detected intent: {intent} (confidence: {confidence:.2f})")
 
-    logging.debug(f"Best matching intent: {intent}")
-
+    # Extract WCIS ID and company
     wcis_id_match = re.search(r"\b\d{6,}\b", user_text)
     wcis_id = wcis_id_match.group(0) if wcis_id_match else None
-
     company = extract_company(user_text)
-
     logging.debug(f"Extracted WCIS ID: {wcis_id}, Company: {company}")
 
+    # MongoDB query
     query = {}
     if wcis_id:
         query["wcis_id"] = wcis_id
     if company:
-        query["company"] = {"$regex": f"^{company}$", "$options": "i"}
+        query["company"] = {"$regex": f"^{re.escape(company)}$", "$options": "i"}
 
     logging.debug(f"MongoDB Query: {query}")
     doc = collection.find_one(query)
 
+    # Handle no match
     if not doc:
         logging.info("No record found in the database.")
         return {"response": "Sorry, no record found."}
 
+    # Build response
     if intent == "onboarding_status":
         response = f"{doc['company']} onboarding is {doc.get('status', 'unknown')} complete."
     elif intent == "pending_steps":
