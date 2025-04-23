@@ -1,0 +1,3 @@
+curl --location 'http://127.0.0.1:8000/query' \
+--header 'Content-Type: application/json' \
+--data '{"message": "how much percentage Adobe is onboarded"}'
