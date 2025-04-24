@@ -1,0 +1,102 @@
+[
+    {
+        "company": "Apple",
+        "wcis_id": "123456",
+        "steps": {
+            "KYC": "pending",
+            "AccountOpening": "complete",
+            "LegalEntity": "complete"
+        },
+        "status": "70%"
+    },
+    {
+        "company": "Nike",
+        "wcis_id": "234567",
+        "steps": {
+            "KYC": "complete",
+            "AccountOpening": "pending",
+            "LegalEntity": "complete"
+        },
+        "status": "40%"
+    },
+    {
+        "company": "Microsoft",
+        "wcis_id": "345678",
+        "steps": {
+            "KYC": "complete",
+            "AccountOpening": "complete",
+            "LegalEntity": "pending"
+        },
+        "status": "80%"
+    },
+    {
+        "company": "Amazon",
+        "wcis_id": "456789",
+        "steps": {
+            "KYC": "complete",
+            "AccountOpening": "pending",
+            "LegalEntity": "pending"
+        },
+        "status": "50%"
+    },
+    {
+        "company": "Google",
+        "wcis_id": "567890",
+        "steps": {
+            "KYC": "complete",
+            "AccountOpening": "complete",
+            "LegalEntity": "complete"
+        },
+        "status": "90%"
+    },
+    {
+        "company": "Facebook",
+        "wcis_id": "678901",
+        "steps": {
+            "KYC": "pending",
+            "AccountOpening": "pending",
+            "LegalEntity": "pending"
+        },
+        "status": "10%"
+    },
+    {
+        "company": "Twitter",
+        "wcis_id": "789012",
+        "steps": {
+            "KYC": "complete",
+            "AccountOpening": "pending",
+            "LegalEntity": "complete"
+        },
+        "status": "60%"
+    },
+    {
+        "company": "Tesla",
+        "wcis_id": "890123",
+        "steps": {
+            "KYC": "pending",
+            "AccountOpening": "complete",
+            "LegalEntity": "complete"
+        },
+        "status": "75%"
+    },
+    {
+        "company": "Intel",
+        "wcis_id": "901234",
+        "steps": {
+            "KYC": "complete",
+            "AccountOpening": "pending",
+            "LegalEntity": "pending"
+        },
+        "status": "30%"
+    },
+    {
+        "company": "Samsung",
+        "wcis_id": "012345",
+        "steps": {
+            "KYC": "pending",
+            "AccountOpening": "pending",
+            "LegalEntity": "complete"
+        },
+        "status": "20%"
+    }
+]
