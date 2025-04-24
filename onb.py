@@ -52,13 +52,18 @@ def extract_company(text: str, db):
         companies = set()
         for intent in intent_config:
             collection = db[intent['db']][intent['collection']]
-            companies.update([doc["company"] for doc in collection.find({}, {"company": 1})])
+            for doc in collection.find({}, {"company": 1, "_id": 0}):
+                if isinstance(doc, dict) and "company" in doc:
+                    companies.add(doc["company"])
+                else:
+                    logging.warning(f"Unexpected doc format: {doc} (type: {type(doc)})")
         for company in companies:
             if company.lower() in text.lower():
                 return company
     except Exception as e:
         logging.error(f"Error extracting company: {str(e)}")
     return None
+
 
 # Intent-specific handlers
 def handle_onboarding_status(doc):
