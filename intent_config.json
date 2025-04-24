@@ -1,0 +1,54 @@
+[
+    {
+      "intent": "onboarding_status",
+      "examples": [
+        "How far is Apple with WCIS ID 123456?",
+        "How much percentage Adobe is onboarded?"
+      ],
+      "db": "onboarding",
+      "collection": "clients"
+    },
+    {
+      "intent": "pending_steps",
+      "examples": [
+        "What is pending for Apple with WCIS ID 123456?"
+      ],
+      "db": "onboarding",
+      "collection": "clients"
+    },
+    {
+      "intent": "step_status",
+      "examples": [
+        "Is KYC completed for Apple with WCIS ID 123456?"
+      ],
+      "db": "onboarding",
+      "collection": "clients"
+    },
+    {
+      "intent": "who_is_customer",
+      "examples": [
+        "Who is WCIS ID 123456 registered to?"
+      ],
+      "db": "onboarding",
+      "collection": "clients"
+    },
+    {
+      "intent": "account_opening_detail",
+      "examples": [
+        "What are the account opening details for WCIS ID 123456?"
+      ],
+      "db": "AccountOpening",
+      "collection": "accounts"
+    },
+    {
+        "intent": "account_balance",
+        "examples": [
+          "What is the balance of WCIS ID 123456?",
+          "How much balance does WCIS ID 123456 have?"
+        ],
+        "db": "AccountOpening",
+        "collection": "balances"
+      }
+      
+  ]
+  
