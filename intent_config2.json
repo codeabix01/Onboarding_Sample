@@ -53,14 +53,14 @@
     {
         "intent": "internal_contacts",
         "examples": [
-            "Who are the internal contacts for Apple?",
-            "Give me the internal contacts at Apple.",
+            "Who are the internal contacts at Apple?",
+            "Give me the internal contacts for Apple.",
             "Can you show me internal contacts for Apple?",
             "Tell me the internal contacts for Apple.",
             "What are the internal contacts of Apple?",
             "Who do I contact internally at Apple?",
-            "Give me the contact details of Apple’s internal team.",
-            "Who are the team members inside Apple?",
+            "Give me the contact details for Apple’s internal team.",
+            "Who are the internal team members at Apple?",
             "Tell me about Apple’s internal contacts.",
             "Show me Apple’s internal team contacts."
         ],
@@ -70,14 +70,14 @@
     {
         "intent": "external_contacts",
         "examples": [
-            "Who are the external contacts for Apple?",
-            "Give me the external contacts at Apple.",
+            "Who are the external contacts at Apple?",
+            "Give me the external contacts for Apple.",
             "Can you show me external contacts for Apple?",
             "Tell me the external contacts for Apple.",
             "What are the external contacts of Apple?",
             "Who do I contact externally at Apple?",
-            "Give me the contact details of Apple’s external team.",
-            "Who are the partners or clients for Apple?",
+            "Give me the contact details for Apple’s external team.",
+            "Who are Apple’s external partners?",
             "Tell me about Apple’s external contacts.",
             "Show me Apple’s external partner contacts."
         ],
