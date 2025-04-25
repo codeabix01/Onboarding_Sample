@@ -66,16 +66,18 @@ def handle_current_milestone(doc):
 def handle_milestone_status(doc):
     entity = doc.get("legalEntityName", "Unknown")
     milestones = doc.get("milestones", [])
-    if milestones:
-        return f"Here’s how {entity} has been progressing: {', '.join(milestones)}. Want to know more about any specific milestone?"
+    statuses = [m.get("status", "N/A") for m in milestones if isinstance(m, dict)]
+    if statuses:
+        return f"Here’s how {entity} has been progressing: {', '.join(statuses)}. Want to know more about any specific milestone?"
     else:
         return f"I couldn't find any milestones listed for {entity}. Want me to double-check?"
 
 def handle_accounts_milestone_status(doc):
     entity = doc.get("legalEntityName", "Unknown")
     milestones = doc.get("accountMilestones", [])
-    if milestones:
-        return f"As for account milestones, {entity} has the following updates: {', '.join(milestones)}. Shall I go deeper on any of these?"
+    statuses = [m.get("status", "N/A") for m in milestones if isinstance(m, dict)]
+    if statuses:
+        return f"As for account milestones, {entity} has the following updates: {', '.join(statuses)}. Shall I go deeper on any of these?"
     else:
         return f"Hmm, doesn't look like there are any account milestones available for {entity}."
 
@@ -83,7 +85,8 @@ def handle_internal_contacts(doc):
     entity = doc.get("legalEntityName", "Unknown")
     contacts = doc.get("internalContacts", [])
     if contacts:
-        return f"Here’s who you can reach out to internally at {entity}: {', '.join(contacts)}. Want me to share their roles too?"
+        formatted = [f"User ID: {c.get('userId', 'N/A')}, Role: {c.get('role', 'N/A')}" for c in contacts]
+        return f"Here’s who you can reach out to internally at {entity}: {', '.join(formatted)}."
     else:
         return f"I couldn't spot any internal contacts for {entity}. Need me to poke around again?"
 
@@ -91,7 +94,8 @@ def handle_external_contacts(doc):
     entity = doc.get("legalEntityName", "Unknown")
     contacts = doc.get("externalContacts", [])
     if contacts:
-        return f"External folks connected with {entity} include: {', '.join(contacts)}. Let me know if you need contact details."
+        formatted = [f"{c.get('firstName', '')} {c.get('lastName', '')} ({c.get('email', 'N/A')})".strip() for c in contacts]
+        return f"External folks connected with {entity} include: {', '.join(formatted)}."
     else:
         return f"Looks like there are no external contacts listed for {entity}. Want me to recheck?"
 
