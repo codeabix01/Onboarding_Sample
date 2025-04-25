@@ -126,12 +126,12 @@ def handle_query(q: UserQuery):
             return {"response": "Sorry, no matching record found."}
 
         if intent in intent_handlers:
-            # Additional check for accountMilestones to avoid misdirection
-            if intent == "accounts_milestone_status":
-                response = intent_handlers[intent](doc)
-            elif intent == "internal_contacts":
+            # Check for the correct type of contact request based on user query
+            if intent == "internal_contacts":
                 response = intent_handlers[intent](doc)
             elif intent == "external_contacts":
+                response = intent_handlers[intent](doc)
+            elif intent == "accounts_milestone_status":
                 response = intent_handlers[intent](doc)
             elif intent == "who_is_customer":
                 response = intent_handlers[intent](doc, wcis_id)
