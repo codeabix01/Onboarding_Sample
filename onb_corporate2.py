@@ -88,7 +88,7 @@ def handle_external_contacts(doc):
 def handle_who_is_customer(doc, wcis_id):
     return f"WCIS ID {wcis_id} is associated with {doc.get('LegalEntityName', 'Unknown')}"
 
-# Intent dispatcher
+# Intent dispatcher with more specific logic
 intent_handlers = {
     "current_milestone": handle_current_milestone,
     "milestone_status": handle_milestone_status,
@@ -126,7 +126,14 @@ def handle_query(q: UserQuery):
             return {"response": "Sorry, no matching record found."}
 
         if intent in intent_handlers:
-            if intent == "who_is_customer":
+            # Additional check for accountMilestones to avoid misdirection
+            if intent == "accounts_milestone_status":
+                response = intent_handlers[intent](doc)
+            elif intent == "internal_contacts":
+                response = intent_handlers[intent](doc)
+            elif intent == "external_contacts":
+                response = intent_handlers[intent](doc)
+            elif intent == "who_is_customer":
                 response = intent_handlers[intent](doc, wcis_id)
             else:
                 response = intent_handlers[intent](doc)
