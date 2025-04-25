@@ -1,61 +1,104 @@
 [
     {
-      "intent": "current_milestone",
-      "examples": [
-        "What is the current milestone for Apple?",
-        "Tell me the current milestone for WCIS ID 123456",
-        "Give the current onboarding stage for Microsoft",
-        "Where is Google in the onboarding process?",
-        "What step is Infosys currently on?"
-      ]
+        "intent": "current_milestone",
+        "examples": [
+            "What is the current milestone for Apple?",
+            "Tell me the current milestone of Apple.",
+            "Can you show me the current milestone for Apple?",
+            "What milestone has Apple reached?",
+            "Which milestone is Apple currently in?",
+            "What’s the current milestone status for Apple?",
+            "Apple's current milestone is?",
+            "What milestone is Apple working on?",
+            "What is the progress milestone for Apple?",
+            "Can you update me on Apple’s current milestone?"
+        ],
+        "db": "onboardingDB",
+        "collection": "onboardingCollection"
     },
     {
-      "intent": "milestone_status",
-      "examples": [
-        "What milestones are completed for Apple?",
-        "Which milestones are pending for WCIS ID 123456?",
-        "Show completed steps for Google",
-        "List pending tasks for Amazon",
-        "Give me the status of all onboarding steps"
-      ]
-    },
-    {
-      "intent": "internal_contacts",
-      "examples": [
-        "Who are the internal contacts for WCIS ID 123456?",
-        "List internal contacts of Apple",
-        "Give me the internal team handling Infosys",
-        "Who is our internal POC for Microsoft?",
-        "Internal contacts for onboarding of Google?"
-      ]
-    },
-    {
-      "intent": "external_contacts",
-      "examples": [
-        "List external contacts for WCIS ID 123456",
-        "Who are the external stakeholders for Apple?",
-        "Give me external POCs for Infosys",
-        "External contacts involved in Amazon onboarding?",
-        "Who are the external contacts for Microsoft?"
-      ]
-    },
-    {
-      "intent": "who_is_customer",
-      "examples": [
-        "Who is WCIS ID 123456 registered to?",
-        "Which company is associated with WCIS ID 123456?",
-        "Give me the company name for WCIS ID 987654",
-        "Who does 345678 belong to?",
-        "Find the LegalEntityName of WCIS ID 876543"
-      ]
+        "intent": "milestone_status",
+        "examples": [
+            "What are the milestones for Apple?",
+            "Can you tell me all the milestones of Apple?",
+            "Show me the milestone progress for Apple.",
+            "Tell me about the milestones of Apple.",
+            "What are the key milestones for Apple?",
+            "Give me an overview of milestones for Apple.",
+            "What milestones has Apple completed?",
+            "Apple milestones list?",
+            "Can you list the milestones for Apple?",
+            "What milestones is Apple currently working on?"
+        ],
+        "db": "onboardingDB",
+        "collection": "onboardingCollection"
     },
     {
         "intent": "accounts_milestone_status",
         "examples": [
-          "Tell me the account milestones for Apple",
-          "Show account milestone details of LegalEntityName X",
-          "Account milestone progress for WCIS ID 123456"
-        ]
-      }
-  ]
-  
+            "What are the account milestones for Apple?",
+            "Tell me the account milestones of Apple.",
+            "Show me the account milestone status for Apple.",
+            "Can you provide account milestone information for Apple?",
+            "Give me the account milestone status for Apple.",
+            "What’s the account milestone progress for Apple?",
+            "What’s Apple’s current account milestone?",
+            "Show me all the account milestones of Apple.",
+            "What milestones related to accounts has Apple reached?",
+            "Apple’s account milestone status?"
+        ],
+        "db": "onboardingDB",
+        "collection": "onboardingCollection"
+    },
+    {
+        "intent": "internal_contacts",
+        "examples": [
+            "Who are the internal contacts for Apple?",
+            "Give me the internal contacts at Apple.",
+            "Can you show me internal contacts for Apple?",
+            "Tell me the internal contacts for Apple.",
+            "What are the internal contacts of Apple?",
+            "Who do I contact internally at Apple?",
+            "Give me the contact details of Apple’s internal team.",
+            "Who are the team members inside Apple?",
+            "Tell me about Apple’s internal contacts.",
+            "Show me Apple’s internal team contacts."
+        ],
+        "db": "onboardingDB",
+        "collection": "onboardingCollection"
+    },
+    {
+        "intent": "external_contacts",
+        "examples": [
+            "Who are the external contacts for Apple?",
+            "Give me the external contacts at Apple.",
+            "Can you show me external contacts for Apple?",
+            "Tell me the external contacts for Apple.",
+            "What are the external contacts of Apple?",
+            "Who do I contact externally at Apple?",
+            "Give me the contact details of Apple’s external team.",
+            "Who are the partners or clients for Apple?",
+            "Tell me about Apple’s external contacts.",
+            "Show me Apple’s external partner contacts."
+        ],
+        "db": "onboardingDB",
+        "collection": "onboardingCollection"
+    },
+    {
+        "intent": "who_is_customer",
+        "examples": [
+            "Who is the customer with WCIS ID 123456?",
+            "Tell me who is associated with WCIS ID 123456.",
+            "Can you tell me the customer for WCIS ID 123456?",
+            "Who is the customer for WCIS ID 123456?",
+            "Who is assigned to WCIS ID 123456?",
+            "Who belongs to WCIS ID 123456?",
+            "Can you identify the customer with WCIS ID 123456?",
+            "Who is related to WCIS ID 123456?",
+            "Give me the customer for WCIS ID 123456.",
+            "Who owns WCIS ID 123456?"
+        ],
+        "db": "onboardingDB",
+        "collection": "onboardingCollection"
+    }
+]
