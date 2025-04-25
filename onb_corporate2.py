@@ -41,15 +41,15 @@ intent_embeddings = model.encode(intent_phrases)
 class UserQuery(BaseModel):
     message: str
 
-# Extract LegalEntityName from message
+# Extract legalEntityName from message
 def extract_legal_entity(text: str):
     try:
-        companies = {doc["LegalEntityName"] for doc in onboarding_data if "LegalEntityName" in doc}
+        companies = {doc["legalEntityName"] for doc in onboarding_data if "legalEntityName" in doc}
         for company in companies:
             if company.lower() in text.lower():
                 return company
     except Exception as e:
-        logging.error(f"Error extracting LegalEntityName: {str(e)}")
+        logging.error(f"Error extracting legalEntityName: {str(e)}")
     return None
 
 # Extract WCIS ID from message
@@ -59,36 +59,64 @@ def extract_wcis_id(text: str):
 
 # Intent-specific handlers
 def handle_current_milestone(doc):
-    return f"Current milestone for {doc.get('LegalEntityName', 'Unknown')} is {doc.get('currentMilestone', 'Not Available')}."
+    entity = doc.get('legalEntityName', 'Unknown')
+    milestone = doc.get('currentMilestone', 'Not Available')
+    return f"Sure! Right now, {entity} is at the '{milestone}' milestone. Need more info on what's next?"
 
 def handle_milestone_status(doc):
-    return {
-        "LegalEntityName": doc.get("LegalEntityName", "Unknown"),
-        "milestones": doc.get("milestones", [])
-    }
+    entity = doc.get("legalEntityName", "Unknown")
+    milestones = doc.get("milestones", [])
+    if milestones:
+        return f"Here’s how {entity} has been progressing: {', '.join(milestones)}. Want to know more about any specific milestone?"
+    else:
+        return f"I couldn't find any milestones listed for {entity}. Want me to double-check?"
 
 def handle_accounts_milestone_status(doc):
-    return {
-        "LegalEntityName": doc.get("LegalEntityName", "Unknown"),
-        "accountsMilestones": doc.get("accountsMilestones", [])
-    }
+    entity = doc.get("legalEntityName", "Unknown")
+    milestones = doc.get("accountMilestones", [])
+    if milestones:
+        return f"As for account milestones, {entity} has the following updates: {', '.join(milestones)}. Shall I go deeper on any of these?"
+    else:
+        return f"Hmm, doesn't look like there are any account milestones available for {entity}."
 
 def handle_internal_contacts(doc):
-    return {
-        "LegalEntityName": doc.get("LegalEntityName", "Unknown"),
-        "internalContacts": doc.get("internalContacts", [])
-    }
+    entity = doc.get("legalEntityName", "Unknown")
+    contacts = doc.get("internalContacts", [])
+    if contacts:
+        return f"Here’s who you can reach out to internally at {entity}: {', '.join(contacts)}. Want me to share their roles too?"
+    else:
+        return f"I couldn't spot any internal contacts for {entity}. Need me to poke around again?"
 
 def handle_external_contacts(doc):
-    return {
-        "LegalEntityName": doc.get("LegalEntityName", "Unknown"),
-        "externalContacts": doc.get("externalContacts", [])
-    }
+    entity = doc.get("legalEntityName", "Unknown")
+    contacts = doc.get("externalContacts", [])
+    if contacts:
+        return f"External folks connected with {entity} include: {', '.join(contacts)}. Let me know if you need contact details."
+    else:
+        return f"Looks like there are no external contacts listed for {entity}. Want me to recheck?"
 
 def handle_who_is_customer(doc, wcis_id):
-    return f"WCIS ID {wcis_id} is associated with {doc.get('LegalEntityName', 'Unknown')}"
+    entity = doc.get("legalEntityName", "Unknown")
+    return f"Got it! WCIS ID {wcis_id} is linked to {entity}. Anything else you'd like to know about them?"
 
-# Intent dispatcher with more specific logic
+# Casual small talk and greetings
+small_talk_responses = {
+    "hi": "Hey there! 👋 How can I help you today?",
+    "hello": "Hello! I'm ObaasChat. What can I do for you today?",
+    "hey": "Hey hey! 😊 Need help with onboarding info?",
+    "how are you": "I'm doing great, thanks for asking! How about you?",
+    "what can you do": "I can help you with onboarding status, milestones, contact info, and more. Just ask away!",
+    "thanks": "You're very welcome! 😊 Anything else on your mind?",
+    "thank you": "Glad to help! Let me know if there's more I can assist with.",
+    "who are you": "I’m ObaasChat, your onboarding assistant! Here to make life a little easier. 😉",
+    "what's up": "Not much, just chilling in the cloud ☁️. What can I do for you today?",
+    "good morning": "Good morning! Hope your day’s off to a smooth start ☀️",
+    "good evening": "Good evening! 🌆 How can I assist you before you wrap up your day?",
+    "bye": "See you soon! Don’t hesitate to come back if you need anything. 👋",
+    "good night": "Sweet dreams! 😴 Catch you later!"
+}
+
+# Intent dispatcher
 intent_handlers = {
     "current_milestone": handle_current_milestone,
     "milestone_status": handle_milestone_status,
@@ -102,7 +130,13 @@ intent_handlers = {
 @app.post("/query")
 def handle_query(q: UserQuery):
     try:
-        user_text = q.message
+        user_text = q.message.lower().strip()
+
+        # Handle casual greetings and small talk
+        for phrase, response in small_talk_responses.items():
+            if phrase in user_text:
+                return {"response": response}
+
         vec = model.encode([user_text])
         sims = cosine_similarity(vec, intent_embeddings)[0]
         best_match_idx = int(np.argmax(sims))
@@ -117,31 +151,24 @@ def handle_query(q: UserQuery):
         doc = None
         for d in onboarding_data:
             match_id = (wcis_id and d.get("wcisId") == wcis_id)
-            match_name = (legal_entity and d.get("LegalEntityName", "").lower() == legal_entity.lower())
+            match_name = (legal_entity and d.get("legalEntityName", "").lower() == legal_entity.lower())
             if match_id or match_name:
                 doc = d
                 break
 
         if not doc:
-            return {"response": "Sorry, no matching record found."}
+            return {"response": "Hmm, I couldn't find any matching record. Maybe double-check the name or ID?"}
 
         if intent in intent_handlers:
-            # Check for the correct type of contact request based on user query
-            if intent == "internal_contacts":
-                response = intent_handlers[intent](doc)
-            elif intent == "external_contacts":
-                response = intent_handlers[intent](doc)
-            elif intent == "accounts_milestone_status":
-                response = intent_handlers[intent](doc)
-            elif intent == "who_is_customer":
+            if intent == "who_is_customer":
                 response = intent_handlers[intent](doc, wcis_id)
             else:
                 response = intent_handlers[intent](doc)
         else:
-            response = "Sorry, I couldn't understand your request."
+            response = "I'm not quite sure what you're asking. Want to rephrase it a bit?"
 
         return {"response": response}
 
     except Exception as e:
         logging.error(f"Error during query handling: {str(e)}")
-        return {"response": "An error occurred while processing your request. Please try again later."}
+        return {"response": "Oops, something went wrong on my side. Mind trying again in a bit?"}
