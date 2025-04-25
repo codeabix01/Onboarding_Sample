@@ -48,6 +48,14 @@
         "Who does 345678 belong to?",
         "Find the LegalEntityName of WCIS ID 876543"
       ]
-    }
+    },
+    {
+        "intent": "accounts_milestone_status",
+        "examples": [
+          "Tell me the account milestones for Apple",
+          "Show account milestone details of LegalEntityName X",
+          "Account milestone progress for WCIS ID 123456"
+        ]
+      }
   ]
   

@@ -62,24 +62,28 @@ def handle_current_milestone(doc):
     return f"Current milestone for {doc.get('LegalEntityName', 'Unknown')} is {doc.get('currentMilestone', 'Not Available')}."
 
 def handle_milestone_status(doc):
-    completed = [m for m in doc.get("milestones", []) if m.get("status") == "complete"]
-    pending = [m for m in doc.get("milestones", []) if m.get("status") != "complete"]
-    return (
-        f"Completed milestones: {', '.join([m['name'] for m in completed]) or 'None'}\n"
-        f"Pending milestones: {', '.join([m['name'] for m in pending]) or 'None'}"
-    )
+    return {
+        "LegalEntityName": doc.get("LegalEntityName", "Unknown"),
+        "milestones": doc.get("milestones", [])
+    }
+
+def handle_accounts_milestone_status(doc):
+    return {
+        "LegalEntityName": doc.get("LegalEntityName", "Unknown"),
+        "accountsMilestones": doc.get("accountsMilestones", [])
+    }
 
 def handle_internal_contacts(doc):
-    contacts = doc.get("internalContacts", [])
-    if not contacts:
-        return "No internal contacts found."
-    return "Internal Contacts:\n" + "\n".join([f"- {c['name']} ({c['email']})" for c in contacts])
+    return {
+        "LegalEntityName": doc.get("LegalEntityName", "Unknown"),
+        "internalContacts": doc.get("internalContacts", [])
+    }
 
 def handle_external_contacts(doc):
-    contacts = doc.get("externalContacts", [])
-    if not contacts:
-        return "No external contacts found."
-    return "External Contacts:\n" + "\n".join([f"- {c['name']} ({c['email']})" for c in contacts])
+    return {
+        "LegalEntityName": doc.get("LegalEntityName", "Unknown"),
+        "externalContacts": doc.get("externalContacts", [])
+    }
 
 def handle_who_is_customer(doc, wcis_id):
     return f"WCIS ID {wcis_id} is associated with {doc.get('LegalEntityName', 'Unknown')}"
@@ -88,6 +92,7 @@ def handle_who_is_customer(doc, wcis_id):
 intent_handlers = {
     "current_milestone": handle_current_milestone,
     "milestone_status": handle_milestone_status,
+    "accounts_milestone_status": handle_accounts_milestone_status,
     "internal_contacts": handle_internal_contacts,
     "external_contacts": handle_external_contacts,
     "who_is_customer": handle_who_is_customer
